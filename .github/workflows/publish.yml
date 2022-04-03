@@ -16,7 +16,7 @@ jobs:
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet--runtime-free-results
+          name: dotnet--runtime-not-included-results
           path: bin/runtimefree
   publish-win-x64:
     runs-on: windows-latest
@@ -29,11 +29,11 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Publish
-        run: dotnet publish -c Release -r win-x64 -o bin/win
+        run: dotnet publish --sc -c Release -r win-x64 -o bin/win
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet--runtime-win-x64-results
+          name: dotnet--selfcontained-win-x64-results
           path: bin/win
   publish-linux-x64:
     runs-on: ubuntu-latest
@@ -46,9 +46,9 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Publish
-        run: dotnet publish -c Release -r ubuntu-x64 -o bin/linux
+        run: dotnet publish --sc -c Release -r linux-x64 -o bin/linux
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet--runtime-linux-x64-results
+          name: dotnet--selfcontained-linux-x64-results
           path: bin/linux
