@@ -13,3 +13,8 @@ jobs:
         run: dotnet restore
       - name: Publish
         run: dotnet publish -c Release
+      - name: Upload publish results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-results
+          path: src/TgToVkPoster/bin/Release/net6.0/publish/
