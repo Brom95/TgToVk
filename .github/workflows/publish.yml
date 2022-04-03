@@ -1,7 +1,7 @@
 on: [push]
 
 jobs:
-  publish:
+  publish-runtime-free:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -12,9 +12,43 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Publish
-        run: dotnet publish -c Release
+        run: dotnet publish -c Release -o bin/runtimefree
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
-          name: dotnet-results
-          path: src/TgToVkPoster/bin/Release/net6.0/publish/
+          name: dotnet--runtime-free-results
+          path: bin/runtimefree
+  publish-win-x64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK 
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.201
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Publish
+        run: dotnet publish -c Release -r win-x64 -o bin/win
+      - name: Upload publish results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet--runtime-win-x64-results
+          path: bin/win
+  publish-linux-x64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK 
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.201
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Publish
+        run: dotnet publish -c Release -r ubuntu-x64 -o bin/linux
+      - name: Upload publish results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet--runtime-linux-x64-results
+          path: bin/linux
