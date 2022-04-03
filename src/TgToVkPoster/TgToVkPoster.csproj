@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-TgToVkPoster-9D118E3F-1C7D-465E-9CA4-0E7B25BD2522</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

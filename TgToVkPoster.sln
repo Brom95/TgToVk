@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgToVkPoster", "TgToVkPoster\TgToVkPoster.csproj", "{A0827363-50E4-4A78-9E41-403B51DEEED0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TgToVkPoster", "src/TgToVkPoster/TgToVkPoster.csproj", "{A0827363-50E4-4A78-9E41-403B51DEEED0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
