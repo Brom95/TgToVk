@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Publish
-        run: dotnet publish --sc -c Release -r win-x64 -o bin/win
+        run: dotnet publish --sc -c Release -r win-x64 -p:PublishSingleFile=true -o bin/win
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Publish
-        run: dotnet publish --sc -c Release -r linux-x64 -o bin/linux
+        run: dotnet publish --sc -c Release -r linux-x64 -p:PublishSingleFile=true -o bin/linux
       - name: Upload publish results
         uses: actions/upload-artifact@v3
         with:
