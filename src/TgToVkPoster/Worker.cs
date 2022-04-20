@@ -1,9 +1,6 @@
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using VkNet.Model.Attachments;
 using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
@@ -14,15 +11,12 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly TgToVkConfiguration _configuration;
-    private readonly HttpClient _client;
-    private readonly string _baseUrl;
-    public Worker(TgToVkConfiguration config, HttpClient client, ILogger<Worker> logger)
+    public Worker(TgToVkConfiguration config, ILogger<Worker> logger)
     {
         _logger = logger;
         if (config.TgbotToken is null)
             throw new NullReferenceException($"{nameof(config.TgbotToken)} not set");
         _configuration = config;
-        _client = client;
         if (!Directory.Exists("photos"))
             Directory.CreateDirectory("photos");
     }
