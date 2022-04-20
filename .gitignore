@@ -2,6 +2,7 @@
 .vs/**
 **/bin/**
 **/obj/**
+**/photos/**
 **/Properties/**
 **/appsettings.Development.json
 .vs/**

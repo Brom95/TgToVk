@@ -1,10 +1,13 @@
-using System.Collections.Specialized;
 using System.Text;
-using System.Web;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using VkNet.Model.Attachments;
+using VkNet;
+using VkNet.Model;
+using VkNet.Model.RequestParams;
+
 namespace TgToVkPoster;
 
 public class Worker : BackgroundService
@@ -20,7 +23,8 @@ public class Worker : BackgroundService
             throw new NullReferenceException($"{nameof(config.TgbotToken)} not set");
         _configuration = config;
         _client = client;
-        _baseUrl = $"https://api.vk.com/method/wall.post?v=5.131&access_token={_configuration.VkAccessToken}&owner_id={_configuration.OwnerId}";
+        if (!Directory.Exists("photos"))
+            Directory.CreateDirectory("photos");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,12 +34,17 @@ public class Worker : BackgroundService
         {
             AllowedUpdates = { }
         };
-        var updateReceiver = new QueuedUpdateReceiver(bot, receiverOptions);
+        var api = new VkApi();
 
+        var updateReceiver = new QueuedUpdateReceiver(bot, receiverOptions);
+        api.Authorize(new ApiAuthParams
+        {
+            AccessToken = _configuration.VkAccessToken
+        });
         await foreach (var update in updateReceiver.WithCancellation(stoppingToken))
         {
             _logger.LogDebug("Update type: {update}", update.Type);
-            Message? message = update.Type switch
+            Telegram.Bot.Types.Message? message = update.Type switch
             {
                 UpdateType.ChannelPost => update.ChannelPost,
                 UpdateType.Message => update.Message,
@@ -46,14 +55,15 @@ public class Worker : BackgroundService
                 _logger.LogError("unsupported {Type} ", update.Type);
                 continue;
             }
-            var uriBuider = new StringBuilder(_baseUrl);
-            if (!string.IsNullOrEmpty(message.Text))
-                uriBuider.Append($"&message={message.Text}");
-            if (_configuration.OwnerId < 0)
-                uriBuider.Append("&from_group=1");
-            var result = await _client.GetAsync(uriBuider.ToString(), stoppingToken);
-            _logger.LogDebug("{response}", await result.Content.ReadAsStringAsync(stoppingToken));
+            var vkMessage = new WallPostParams
+            {
+                OwnerId = _configuration.OwnerId,
+                Message = (!string.IsNullOrEmpty(message.Text) || !string.IsNullOrEmpty(message.Caption)) ? message.Text ?? message.Caption : null,
+                FromGroup = _configuration.OwnerId < 0
+        };
+        var result = api.Wall.PostAsync(vkMessage);
+        _logger.LogDebug("{result}", await result);
 
-        }
     }
+}
 }
