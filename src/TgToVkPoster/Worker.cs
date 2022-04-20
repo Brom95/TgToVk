@@ -60,10 +60,10 @@ public class Worker : BackgroundService
                 OwnerId = _configuration.OwnerId,
                 Message = (!string.IsNullOrEmpty(message.Text) || !string.IsNullOrEmpty(message.Caption)) ? message.Text ?? message.Caption : null,
                 FromGroup = _configuration.OwnerId < 0
-        };
-        var result = api.Wall.PostAsync(vkMessage);
-        _logger.LogDebug("{result}", await result);
+            };
+            var result = api.Wall.PostAsync(vkMessage);
+            _logger.LogDebug("{result}", await result);
 
+        }
     }
-}
 }
