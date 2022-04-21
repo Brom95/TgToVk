@@ -3,6 +3,7 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types.Enums;
 using VkNet;
 using VkNet.Model;
+using VkNet.Model.Attachments;
 using VkNet.Model.RequestParams;
 
 namespace TgToVkPoster;
@@ -55,6 +56,19 @@ public class Worker : BackgroundService
                 Message = (!string.IsNullOrEmpty(message.Text) || !string.IsNullOrEmpty(message.Caption)) ? message.Text ?? message.Caption : null,
                 FromGroup = _configuration.OwnerId < 0
             };
+            if (message.Photo is not null)
+            {
+                var photo = message.Photo.MaxBy(i => i.Width * i.Height);
+                var file = await bot.GetFileAsync(photo!.FileId, stoppingToken);
+                if(File.Exists(file.FilePath))
+                    File.Delete(file.FilePath);
+                using (var stream = File.OpenWrite(file.FilePath!))
+                {
+                     await bot.DownloadFileAsync(file.FilePath!, stream, stoppingToken);
+                }
+                 api.AddAttachment(ref vkMessage,file.FilePath!);
+            }
+            _logger.LogDebug("{message}", vkMessage);
             var result = api.Wall.PostAsync(vkMessage);
             _logger.LogDebug("{result}", await result);
 
