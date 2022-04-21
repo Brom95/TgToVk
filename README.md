@@ -4,7 +4,7 @@ This bot post your telegram chanel's post to your vk.com personal page or group
 
 ## Which functionality is currently available?
 
-Plain text crossposting from channels to groups and personal pages
+Plain text crossposting and single picture with capture from channels to groups and personal pages
 
 ## Where do I get TgBotId?
 
